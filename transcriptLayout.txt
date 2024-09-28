@@ -1,0 +1,110 @@
+Page 1 of 2
+
+
+
+
+                                   Kutztown University
+                       Unofficial Undergraduate Academic Record
+Name:       Aidan Lapenta
+Student ID: 002202110
+
+Birthdate:      May 28                                                                                                     Fall 2022
+Print Date:     2023-11-30                                                                  Plan:         BS INFORMATION TECHNOLOGY Major
+                                                                                            Plan:         CYBERSECURITY Certificate
+                   Beginning of Undergraduate Record
+                                                                                            Course          Description                              Attempted        Earned Grade
+                              Fall 2021                                                     CSC 111         COMPUTER FORENSICS                            3.00          3.00   A
+Plan:         BS COMPUTER SCIENCE Major                                                     CSC 242         SERVER-SIDE WEB                               3.00          3.00   A
+                                                                                                            DEVELOPMENT
+Course          Description              Attempted                       Earned Grade       CSC 253         IT SYSTEMS                                      3.00        3.00       A
+CMP 100         EFFECTIVE COMPOSITION          3.00                        3.00   A         MAT 140         APL STATISTICAL METH                            3.00        3.00       A
+CSC 135         COMPUTER SCIENCE I             3.00                        3.00   A             QL
+    Topic:      HONORS                                                                      MUS 20          BASIC CONCPT&SKLS OF                            3.00        3.00       A
+CSC 150         ETHICAL LEGAL PROF             3.00                         3.00      A                     MUS
+                IMPACT DIG
+   Topic:       HONORS                                                                      Dean's List
+FYS 100         FIRST YEAR SEMINAR             3.00                         3.00      A                                                   Points Attempted             Earned     GPA
+   Topic:       MATHEMATICAL PUZZLES & INFINIT                                               Term Total                                   60.00            15.00         15.00    4.00
+MAT 181         CALCULUS I                     4.00                         4.00      A      Term Transfer                                                                0.00
+Transfer Credit from COMMUNITY COLLEGE AIR FORCE                                             Cumulative Total                            184.00            46.00         65.00    4.00
+PEC 70      PERSONAL FITNESS                                               2.00      CR                 ---------------------------------------------------------------------
+SPT 20      FIRST AID                                                      2.00      CR
+                                                                                                                         Spring 2023
+Test Credits                                                                                Plan:         BS INFORMATION TECHNOLOGY Major
+FRE 101 ELEMENTARY FRENCH I                                                3.00      CR
+FRE 102 ELEMENTARY FRENCH II                                               3.00      CR     Plan:         CYBERSECURITY Certificate
+FRE 103 INTERMEDIATE FRENCH III                                            3.00      CR     Course          Description                              Attempted        Earned Grade
+FRE 104 INTERMEDIATE FRENCH IV                                             3.00      CR     CSC 237         DATA STRUCTURES                               3.00          3.00   A
+FRE 212 FRENCH COMPOSITION                                                 3.00      CR     CSC 273         COMPUTING SYSTEMS                             3.00          3.00   A
+Dean's List                                                                                                 INTEGRATION
+                                                                                            ENG 117         SCIENCE FICTION                                 3.00        3.00       A
+                                              Points    Attempted          Earned    GPA    GEL 31          GEL OF NTL                                      3.00        3.00       A
+ Term Total                                   64.00         16.00            16.00   4.00                   PARKS/MONUMENT
+ Term Transfer                                                               19.00          POL 30          INTRO TO WORLD POLITICS                         3.00        3.00       A
+ Cumulative Total                             64.00            16.00         35.00   4.00       CD
+            ---------------------------------------------------------------------              Topic:       HONORS
+
+                             Spring 2022                                                    Dean's List
+Plan:         BS INFORMATION TECHNOLOGY Major                                                                                             Points Attempted             Earned     GPA
+Plan:         CYBERSECURITY Certificate                                                      Term Total                                   60.00            15.00         15.00    4.00
+                                                                                             Term Transfer                                                                0.00
+Course          Description                             Attempted        Earned Grade        Cumulative Total                            244.00            61.00         80.00    4.00
+ANT 212         SHAMANS, WITCHES &                           3.00          3.00   A                     ---------------------------------------------------------------------
+     CDWI       MAGIC
+    Topic:      HONORS                                                                                                     Fall 2023
+CMP 200         RESEARCH AND                                   3.00         3.00      A     Plan:         BS INFORMATION TECHNOLOGY Major
+                COMPOSITION
+   Topic:       HONORS                                                                      Plan:         CYBERSECURITY Certificate
+CSC 125         DISCRETE MATH FOR COMP                         3.00         3.00      A     Course          Description                              Attempted        Earned Grade
+    CT          I                                                                           CRJ 170         INTRO SECURITY                                3.00          0.00
+CSC 223         ADVANCED SCIENTIFIC                            3.00         3.00      A                     MANAGEMENT
+                PROGRAMING                                                                  CSC 311         COMPUTER NETWORKS                               3.00        0.00
+CSC 252         UNIX:SCRIPTING AND                             3.00         3.00      A     CSC 341         INTRO TO INFORMATION                            3.00        0.00
+                ADMIN                                                                                       SECURITY
+Dean's List                                                                                 CSC 354         SOFTWARE ENGINEERING I                          3.00        0.00
+                                                                                               Topic:       HONORS
+                                              Points Attempted             Earned    GPA    CSC 411         ADVANCED NETWORKING                             3.00        0.00
+ Term Total                                   60.00            15.00         15.00   4.00   SOC 10          PRINCIPLES OF SOCIOLOGY                         3.00        0.00
+ Term Transfer                                                                0.00
+ Cumulative Total                            124.00            31.00         50.00   4.00                                                 Points Attempted              Earned    GPA
+            ---------------------------------------------------------------------            In Progress                                     0.00           18.00          0.00   0.00
+                                                                                             Term Transfer                                                                 0.00
+                                                                                                         ---------------------------------------------------------------------
+Page 2 of 2
+
+
+
+
+                                    Kutztown University
+                        Unofficial Undergraduate Academic Record
+Name:       Aidan Lapenta
+Student ID: 002202110
+
+
+                            Spring 2024
+Plan:        BS INFORMATION TECHNOLOGY Major
+Plan:        CYBERSECURITY Certificate
+Course          Description                              Attempted        Earned Grade
+CRJ 171         LOSS PREVENTION &                             3.00          0.00
+                ASSEST PROT
+CRJ 215         INTRO CRIME MAPPING &                           3.00        0.00
+                ANALYSIS
+CSC 355         SOFTWARE ENGINEERING II                         3.00        0.00
+   Topic:       HONORS
+CSC 356         INTRO DATA BASE MGM                             3.00        0.00
+                SYS
+CSC 372         INDPT STD&/OR PROJ IN                           3.00        0.00
+                CSC
+                                              Points Attempted              Earned    GPA
+ In Progress                                     0.00           15.00          0.00   0.00
+ Term Transfer                                                                 0.00
+             ---------------------------------------------------------------------
+
+                            Undergraduate Career Totals
+                                        Points Attempted                 Earned       GPA
+ Enrollment Total                      244.00       61.00                 61.00       4.00
+ Transfer Total                                                           19.00
+ Combined Total                               244.00          61.00       80.00       4.00
+
+          End of Unofficial Undergraduate Academic Record
+
