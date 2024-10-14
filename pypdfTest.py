@@ -1,4 +1,5 @@
 from pypdf import PdfReader
+import pdfquery
 
 reader = PdfReader("Unofficial Transcript.pdf")
 page = reader.pages[0]
