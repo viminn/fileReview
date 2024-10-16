@@ -22,6 +22,7 @@ file = "UnofficialTranscript.pdf"
 fullOutput = 'output.txt'
 justHonors = "honors.txt"
 roughRE = re.compile(r'^([a-zA-Z]{3,4})\s*(\d{1,3})\s*(.*?)(HONORS.*|\n.*?HONORS.*)')
+honorsRE = re.compile(r'[A-Z]+\s\d{2,3}.*?\n*?.*HONORS', re.IGNORECASE)
 with pdfplumber.open(file) as pdf:
     with open(fullOutput, 'w', encoding='utf-8') as text_file:
         for page in pdf.pages:

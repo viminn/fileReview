@@ -1,0 +1,5 @@
+all about generalizing the process
+
+Getting the text from the pdf is all as one string with newlines. Can't split on newline because it puts "Campus" and "Honors" on the next line
+
+replace \nHonors with Honors to join it?
