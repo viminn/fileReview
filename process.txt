@@ -3,3 +3,11 @@ all about generalizing the process
 Getting the text from the pdf is all as one string with newlines. Can't split on newline because it puts "Campus" and "Honors" on the next line
 
 replace \nHonors with Honors to join it?
+
+POL 030 is just 30 that's cool
+
+https://docs.python.org/3/library/re.html#search-vs-match
+
+Honors is not always in the last thing in the string
+
+Grades and Course names can be joined and tough to parse out like "Project in CSCA" since C is also a valid grade
