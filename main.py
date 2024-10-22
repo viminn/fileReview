@@ -80,8 +80,10 @@ for student in allStudentList:
     # print(courseDict)
     studentJSON[studentName] = courseDict
 
-pprint(studentJSON)
+# pprint(studentJSON)
 
+# actualJSON = json.dumps(studentJSON, indent=2)
+# print(actualJSON)
 
 
 
