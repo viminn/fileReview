@@ -1,30 +1,50 @@
-<!-- <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Hello World!</title>
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
-  </body>
-</html> -->
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Electron App</title>
+    <title>File Review Helper</title>
   </head>
   <body>
     <h1>Hello from Electron</h1>
+    <h2>Use the button below to open the desired pdf and use the second button to parse it</h2>
+
+    <!-- Button to select a file -->
+    <button id="select-file">Select File</button>
+    <p id="selected-file">No file selected</p>
+
+    <!-- Button to run the Python script -->
     <button id="run-script">Run Python Script</button>
-    <div id="result"></div>
+    <pre>
+      <div id="result"></div>
+    </pre>
+
     <script>
+      let selectedFilePath = '';
+
+      // Handle file selection
+      document.getElementById('select-file').addEventListener('click', () => {
+        window.electronAPI.selectFile().then((filePath) => {
+          if (filePath) {
+            selectedFilePath = filePath;
+            document.getElementById('selected-file').textContent = `Selected File: ${filePath}`;
+          }
+        });
+      });
+
+      // Handle script execution
       document.getElementById('run-script').addEventListener('click', () => {
-        fetch('http://127.0.0.1:5000/run-script') // Call your Flask API
+        if (!selectedFilePath) {
+          document.getElementById('result').textContent = "Please select a file first.";
+          return;
+        }
+        console.log("Selected file path: ", selectedFilePath);  // Add this line
+        fetch(`http://127.0.0.1:5000/run-script?file=${encodeURIComponent(selectedFilePath)}`)
           .then(response => response.json())
           .then(data => {
-            document.getElementById('result').textContent = data.output;
+            document.getElementById('result').textContent = JSON.stringify(data, null, 4);
+          })
+          .catch(error => {
+            console.error("Error during fetch: ", error);
+            document.getElementById('result').textContent = "Error: " + error.message;
           });
       });
     </script>

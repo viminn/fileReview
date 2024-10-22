@@ -1,7 +1,7 @@
 import re
 import pdfplumber
-from pprint import pprint
 import json
+from pprint import pprint
 
 file = "bigUnofficialTranscript.pdf"
 text = ""
