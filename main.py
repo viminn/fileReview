@@ -1,7 +1,8 @@
 import re
 import pdfplumber
-import json
 from pprint import pprint
+import json
+import csv
 
 file = "bigUnofficialTranscript.pdf"
 text = ""
@@ -22,10 +23,14 @@ allStudentList = re.split(studentChunkRE,text)
 allStudentList = filter(None, allStudentList)
 allStudentList = list(filter(len,allStudentList))
 
-studentJSON = {}
+
 termLineRE = re.compile('(Term: )(\w*\s\d{4})')
+studentNum = 1
+wholeJSON = {}
+# studentJSON = {}
 
 for student in allStudentList:
+    studentJSON = {}
     courseList = []
     joinedCourseList = []
     honorsList = []
@@ -50,7 +55,7 @@ for student in allStudentList:
                 lastName = line.group(1)
                 firstName = line.group(2)
                 studentName = firstName + ' ' + lastName
-                
+
     # join lines where Campus HONORS is on the next line
     for entry in courseList:
         if entry == 'Campus HONORS':
@@ -58,14 +63,14 @@ for student in allStudentList:
                 joinedCourseList[-1] += ' ' + entry
         else:
             joinedCourseList.append(entry)
-            
+
     # build a list of honors courses
     for course in joinedCourseList:
         if honorsRE.match(course):
             honorsList.append(course)
 
     cleanedHonorsList = [s.replace('\n', '') for s in honorsList]
-    
+
     # parse out a course into pieces of info
     for course in cleanedHonorsList:
         if courseLineRE.match(course):
@@ -77,13 +82,20 @@ for student in allStudentList:
                 grade = course.group(6)
                 creditHours = course.group(7)
                 courseDict[courseCode] = {"term": term, "title": title, "grade": grade, "credits": creditHours}
-    # print(courseDict)
-    studentJSON[studentName] = courseDict
+    studentJSON["name"] = studentName
+    studentJSON["courses"] = courseDict
+    wholeJSON[str(studentNum)] = studentJSON
+    studentNum += 1
 
-# pprint(studentJSON)
+# output to csv
+filename = "students_courses.csv"
 
-# actualJSON = json.dumps(studentJSON, indent=2)
-# print(actualJSON)
-
-
-
+with open(filename, mode='w', newline='') as file:
+    writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
+    
+    writer.writerow(['name', 'course code', 'title', 'grade', 'credits', 'term'])
+    
+    for student_id, student_info in wholeJSON.items():
+        name = student_info['name']
+        for course_code, course_info in student_info['courses'].items():
+            writer.writerow([name, course_code, course_info['title'], course_info['grade'], course_info['credits'], course_info['term']])
