@@ -24,3 +24,5 @@ Easy debugging familiarity with JS
 3. keep "HONORS" when it's on a newline
 4. get the student's name
 5. get the term
+
+Generate exe with "wine python -m PyInstaller --onefile --windowed --hidden-import=pdfplumber tkinterTest.py"

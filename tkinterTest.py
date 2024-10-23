@@ -1,14 +1,20 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, Toplevel, Label
 import pdfplumber
 import csv
+import re
 import os
+import threading
 
 def open_pdf():
     # Open a file dialog to choose a PDF file
     file_path = filedialog.askopenfilename(title="Select PDF File", filetypes=[("PDF files", "*.pdf")])
     if file_path:
-        process_pdf(file_path)
+        # Show the processing window
+        show_processing_window()
+
+        # Start a thread to process the PDF without freezing the GUI
+        threading.Thread(target=process_pdf, args=(file_path,)).start()
 
 def save_csv(wholeJSON):
     # Open a file dialog to choose where to save the CSV file
@@ -28,10 +34,6 @@ def save_csv(wholeJSON):
 def process_pdf(file_path):
     # Extract data from the PDF file using pdfplumber
     try:
-        import re
-        import pdfplumber
-        import csv
-
         text = ""
 
         honorsRE = re.compile(r'.*honors', re.IGNORECASE)
@@ -111,15 +113,41 @@ def process_pdf(file_path):
             studentJSON["courses"] = courseDict
             wholeJSON[str(studentNum)] = studentJSON
             studentNum += 1
+
+        close_processing_window()
         save_csv(wholeJSON)
 
     except Exception as e:
+        close_processing_window()
         messagebox.showerror("Error", f"An error occurred: {e}")
+
+# Global variable to hold the processing window reference
+processing_window = None
+
+def show_processing_window():
+    global processing_window
+    processing_window = Toplevel()
+    processing_window.title("Processing")
+    processing_window.geometry("300x100")
+    
+    # Add a label to the window
+    label = Label(processing_window, text="Processing, please wait...")
+    label.pack(pady=20)
+
+    # Disable interaction with the main window while processing
+    processing_window.grab_set()
+
+def close_processing_window():
+    global processing_window
+    if processing_window:
+        processing_window.destroy()
+        processing_window = None
 
 def create_gui():
     # Create the main GUI window
     root = tk.Tk()
     root.title("PDF to CSV Converter")
+    root.geometry("300x100")
 
     # Create a button to trigger the file open dialog
     open_button = tk.Button(root, text="Open PDF", command=open_pdf)
