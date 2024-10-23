@@ -1,7 +1,5 @@
 import re
 import pdfplumber
-from pprint import pprint
-import json
 import csv
 
 file = "bigUnofficialTranscript.pdf"
