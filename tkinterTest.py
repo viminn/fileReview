@@ -33,12 +33,13 @@ def save_csv(wholeJSON):
 
 def process_pdf(file_path):
     # Extract data from the PDF file using pdfplumber
+    # TODO most recent GPA, cumulative GPA
     try:
         text = ""
 
         honorsRE = re.compile(r'.*honors', re.IGNORECASE)
         courseRE = re.compile(r'[A-Z]+\s\d{2,3}')
-        courseLineRE = re.compile(r'(\w* \d{4}) ([A-Z]+ \d+) (\w+\s*\w*) ([UGA]*) (\D+?) ([ABCDF-]*)\s?(\d\.\d{3})')
+        courseLineRE = re.compile(r'(\w* \d{4}) ([A-Z]+ \d+) (\w+\s*\w*) ([UGA]*) (\D+?) ([ABCDFIWNP+-]*)\s?(\d\.\d{3})')
         nameRE = re.compile(r'^([A-Za-z]+), ([A-Za-z]+)')
         studentChunkRE = re.compile('(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
         termLineRE = re.compile('(Term: )(\w*\s\d{4})')

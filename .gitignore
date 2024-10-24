@@ -1,5 +1,6 @@
 build/
 *.spec
+*.csv
 
 # Logs
 logs
