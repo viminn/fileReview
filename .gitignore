@@ -1,6 +1,9 @@
 build/
 *.spec
 *.csv
+*.pdf
+ipynb_checkpoints/
+__pycache__/
 
 # Logs
 logs
