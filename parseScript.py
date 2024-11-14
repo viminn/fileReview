@@ -1,9 +1,21 @@
 import re
 import pdfplumber
 import csv
+import sys
 
-file = "bigUnofficialTranscript.pdf"
-text = ""
+argsNum = len(sys.argv)
+
+match argsNum:
+    case 1:
+        inputFile = "UnofficialTranscript.pdf"
+        outputFile  = "students_courses.csv"
+    case 2:
+        inputFile = sys.argv[1]
+    case 3:
+        inputFile = sys.argv[1]
+        outputFile  = sys.argv[2]
+    
+pdfText = ""
 
 honorsRE = re.compile(r'.*honors', re.IGNORECASE)
 courseRE = re.compile(r'[A-Z]+\s\d{2,3}')
@@ -12,12 +24,12 @@ nameRE = re.compile(r'^([A-Za-z]+), ([A-Za-z]+)')
 studentChunkRE = re.compile('(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
 
 # put all text of a pdf into a string
-with pdfplumber.open(file) as pdf:
+with pdfplumber.open(inputFile) as pdf:
     for page in pdf.pages:
-        text += page.extract_text() + "\n"
+        pdfText += page.extract_text() + "\n"
 
 # split the string across students
-allStudentList = re.split(studentChunkRE,text)
+allStudentList = re.split(studentChunkRE,pdfText)
 allStudentList = filter(None, allStudentList)
 allStudentList = list(filter(len,allStudentList))
 
@@ -25,7 +37,6 @@ allStudentList = list(filter(len,allStudentList))
 termLineRE = re.compile('(Term: )(\w*\s\d{4})')
 studentNum = 1
 wholeJSON = {}
-# studentJSON = {}
 
 for student in allStudentList:
     studentJSON = {}
@@ -86,9 +97,7 @@ for student in allStudentList:
     studentNum += 1
 
 # output to csv
-filename = "students_courses.csv"
-
-with open(filename, mode='w', newline='') as file:
+with open(outputFile , mode='w', newline='') as file:
     writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
     
     writer.writerow(['name', 'course code', 'title', 'grade', 'credits', 'term'])
