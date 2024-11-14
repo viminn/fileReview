@@ -64,7 +64,6 @@ def process_pdf(file_path):
             honorsList = []
             studentName = ""
             courseDict = {}
-            termList = []
             term = ""
 
             # build a list of all a student's courses
@@ -122,7 +121,6 @@ def process_pdf(file_path):
         close_processing_window()
         messagebox.showerror("Error", f"An error occurred: {e}")
 
-# Global variable to hold the processing window reference
 processing_window = None
 
 def show_processing_window():
