@@ -34,11 +34,11 @@ def process_pdf(file_path):
     try:
         pdfText = ""
 
+        studentChunkRE = re.compile(r'(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
         honorsRE = re.compile(r'.*honors', re.IGNORECASE)
         courseRE = re.compile(r'[A-Z]+\s\d{2,3}')
         courseLineRE = re.compile(r'(\w* \d{4}) ([A-Z]+ \d+) (\w+\s*\w*) ([UGA]*) (\D+?) ([ABCDFIWNP+-]*)\s?(\d\.\d{3})')
         nameRE = re.compile(r'^([A-Za-z]+), ([A-Za-z]+)')
-        studentChunkRE = re.compile(r'(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
         termGpaRE = re.compile(r'(Current Term) (?:\d*.\d*)* (\d.\d{2})')
         cGpaRE = re.compile(r'(Overall) (?:\d*.\d*)* (\d.\d{2})')
         termLineRE = re.compile('(Term: )(\w*\s\d{4})')
@@ -137,7 +137,6 @@ def show_processing_window():
     processing_window.title("Processing")
     processing_window.geometry("300x100")
     
-    # Add a label to the window
     label = Label(processing_window, text="Processing, please wait...")
     label.pack(pady=20)
 
@@ -156,11 +155,9 @@ def create_gui():
     root.title("Transcriptr")
     root.geometry("300x100")
 
-    # Create a button to trigger the file open dialog
     open_button = tk.Button(root, text="Open PDF", command=open_pdf)
     open_button.pack(pady=20)
 
-    # Start the Tkinter main loop
     root.mainloop()
 
 if __name__ == "__main__":

@@ -3,6 +3,8 @@ build/
 *.csv
 *.pdf
 ipynb_checkpoints/
+*.txt
+*.exe
 
 # Logs
 logs
