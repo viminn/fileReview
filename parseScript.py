@@ -5,23 +5,19 @@ import sys
 
 argsNum = len(sys.argv)
 
-match argsNum:
-    case 1:
-        inputFile = "UnofficialTranscript.pdf"
-        outputFile  = "students_courses.csv"
-    case 2:
-        inputFile = sys.argv[1]
-    case 3:
-        inputFile = sys.argv[1]
-        outputFile  = sys.argv[2]
-    
+inputFile = sys.argv[1] if len(sys.argv) > 1 else "UnofficialTranscript.pdf"
+outputFile = sys.argv[2] if len(sys.argv) > 2 else "students_courses.csv"
+
 pdfText = ""
 
 honorsRE = re.compile(r'.*honors', re.IGNORECASE)
 courseRE = re.compile(r'[A-Z]+\s\d{2,3}')
 courseLineRE = re.compile(r'(\w* \d{4}) ([A-Z]+ \d+) (\w+\s*\w*) ([UGA]*) (\D+?) ([ABCDF-]*)\s?(\d\.\d{3})')
 nameRE = re.compile(r'^([A-Za-z]+), ([A-Za-z]+)')
-studentChunkRE = re.compile('(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
+studentChunkRE = re.compile(r'(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
+termGpaRE = re.compile(r'(Current Term) (?:\d*.\d*)* (\d.\d{2})')
+cGpaRE = re.compile(r'(Overall) (?:\d*.\d*)* (\d.\d{2})')
+termLineRE = re.compile('(Term: )(\w*\s\d{4})')
 
 # put all text of a pdf into a string
 with pdfplumber.open(inputFile) as pdf:
@@ -33,8 +29,6 @@ allStudentList = re.split(studentChunkRE,pdfText)
 allStudentList = filter(None, allStudentList)
 allStudentList = list(filter(len,allStudentList))
 
-
-termLineRE = re.compile('(Term: )(\w*\s\d{4})')
 studentNum = 1
 wholeJSON = {}
 
@@ -47,24 +41,31 @@ for student in allStudentList:
     courseDict = {}
     termList = []
     term = ""
-
+    gpaTermList = []
+    cGpa = None
+    
     # build a list of all a student's courses
     for line in student.split('\n'):
         if termLineRE.match(line):
             termLine = termLineRE.search(line)
             term = termLine.group(2)
-        if courseRE.match(line):
+        elif courseRE.match(line):
             line = term + " " + line
             courseList.append(line)
-        if honorsRE.match(line):
+        elif honorsRE.match(line):
             courseList.append(line)
-        if nameRE.match(line):
+        elif nameRE.match(line):
             line = nameRE.search(line)
             if line:
                 lastName = line.group(1)
                 firstName = line.group(2)
                 studentName = firstName + ' ' + lastName
-
+        elif cGpaRE.match(line):
+            cGpaLine = cGpaRE.search(line)
+            cGpa = cGpaLine.group(2)
+        elif termGpaRE.match(line):
+            termGpaLine = termGpaRE.search(line)
+            gpaTermList.append(termGpaLine.group(2))
     # join lines where Campus HONORS is on the next line
     for entry in courseList:
         if entry == 'Campus HONORS':
@@ -92,17 +93,21 @@ for student in allStudentList:
                 creditHours = course.group(7)
                 courseDict[courseCode] = {"term": term, "title": title, "grade": grade, "credits": creditHours}
     studentJSON["name"] = studentName
+    studentJSON["lastTermGPA"] = gpaTermList[-1]
+    studentJSON["cumulativeGPA"] = cGpa
     studentJSON["courses"] = courseDict
     wholeJSON[str(studentNum)] = studentJSON
     studentNum += 1
-
+    
 # output to csv
 with open(outputFile , mode='w', newline='') as file:
     writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
     
-    writer.writerow(['name', 'course code', 'title', 'grade', 'credits', 'term'])
+    writer.writerow(['Name', 'Current Term GPA', 'Cumulative GPA', 'Course Code', 'Title', 'Grade', 'Credits', 'Term'])
     
     for student_id, student_info in wholeJSON.items():
         name = student_info['name']
+        termGPA = student_info['lastTermGPA']
+        cGPA = student_info['cumulativeGPA']
         for course_code, course_info in student_info['courses'].items():
-            writer.writerow([name, course_code, course_info['title'], course_info['grade'], course_info['credits'], course_info['term']])
+            writer.writerow([name, termGPA, cGPA, course_code, course_info['title'], course_info['grade'], course_info['credits'], course_info['term']])

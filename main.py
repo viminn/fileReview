@@ -7,50 +7,49 @@ import os
 import threading
 
 def open_pdf():
-    # Open a file dialog to choose a PDF file
     file_path = filedialog.askopenfilename(title="Select PDF File", filetypes=[("PDF files", "*.pdf")])
     if file_path:
-        # Show the processing window
         show_processing_window()
 
         # Start a thread to process the PDF without freezing the GUI
         threading.Thread(target=process_pdf, args=(file_path,)).start()
 
 def save_csv(wholeJSON):
-    # Open a file dialog to choose where to save the CSV file
     save_path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")])
     if save_path:
         with open(save_path, mode='w', newline='') as file:
             writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['name', 'course code', 'title', 'grade', 'credits', 'term'])
+            writer.writerow(['Name', 'Current Term GPA', 'Cumulative GPA', 'Course Code', 'Title', 'Grade', 'Credits', 'Term'])
 
             for student_id, student_info in wholeJSON.items():
                 name = student_info['name']
+                termGPA = student_info['lastTermGPA']
+                cGPA = student_info['cumulativeGPA']
                 for course_code, course_info in student_info['courses'].items():
-                    writer.writerow([name, course_code, course_info['title'], course_info['grade'], course_info['credits'], course_info['term']])
-
+                    writer.writerow([name, termGPA, cGPA, course_code, course_info['title'], course_info['grade'], course_info['credits'], course_info['term']])
+            
         messagebox.showinfo("Success", f"CSV saved successfully at {save_path}")
 
 def process_pdf(file_path):
-    # Extract data from the PDF file using pdfplumber
-    # TODO most recent GPA, cumulative GPA
     try:
-        text = ""
+        pdfText = ""
 
         honorsRE = re.compile(r'.*honors', re.IGNORECASE)
         courseRE = re.compile(r'[A-Z]+\s\d{2,3}')
         courseLineRE = re.compile(r'(\w* \d{4}) ([A-Z]+ \d+) (\w+\s*\w*) ([UGA]*) (\D+?) ([ABCDFIWNP+-]*)\s?(\d\.\d{3})')
         nameRE = re.compile(r'^([A-Za-z]+), ([A-Za-z]+)')
-        studentChunkRE = re.compile('(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
+        studentChunkRE = re.compile(r'(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
+        termGpaRE = re.compile(r'(Current Term) (?:\d*.\d*)* (\d.\d{2})')
+        cGpaRE = re.compile(r'(Overall) (?:\d*.\d*)* (\d.\d{2})')
         termLineRE = re.compile('(Term: )(\w*\s\d{4})')
 
         # put all text of a pdf into a string
         with pdfplumber.open(file_path) as pdf:
             for page in pdf.pages:
-                text += page.extract_text() + "\n"
+                pdfText += page.extract_text() + "\n"
 
         # split the string across students
-        allStudentList = re.split(studentChunkRE,text)
+        allStudentList = re.split(studentChunkRE,pdfText)
         allStudentList = filter(None, allStudentList)
         allStudentList = list(filter(len,allStudentList))
 
@@ -65,24 +64,31 @@ def process_pdf(file_path):
             studentName = ""
             courseDict = {}
             term = ""
-
+            gpaTermList = []
+            cGpa = None
+            
             # build a list of all a student's courses
             for line in student.split('\n'):
                 if termLineRE.match(line):
                     termLine = termLineRE.search(line)
                     term = termLine.group(2)
-                if courseRE.match(line):
+                elif courseRE.match(line):
                     line = term + " " + line
                     courseList.append(line)
-                if honorsRE.match(line):
+                elif honorsRE.match(line):
                     courseList.append(line)
-                if nameRE.match(line):
+                elif nameRE.match(line):
                     line = nameRE.search(line)
                     if line:
                         lastName = line.group(1)
                         firstName = line.group(2)
                         studentName = firstName + ' ' + lastName
-
+                elif cGpaRE.match(line):
+                    cGpaLine = cGpaRE.search(line)
+                    cGpa = cGpaLine.group(2)
+                elif termGpaRE.match(line):
+                    termGpaLine = termGpaRE.search(line)
+                    gpaTermList.append(termGpaLine.group(2))
             # join lines where Campus HONORS is on the next line
             for entry in courseList:
                 if entry == 'Campus HONORS':
@@ -110,6 +116,8 @@ def process_pdf(file_path):
                         creditHours = course.group(7)
                         courseDict[courseCode] = {"term": term, "title": title, "grade": grade, "credits": creditHours}
             studentJSON["name"] = studentName
+            studentJSON["lastTermGPA"] = gpaTermList[-1]
+            studentJSON["cumulativeGPA"] = cGpa
             studentJSON["courses"] = courseDict
             wholeJSON[str(studentNum)] = studentJSON
             studentNum += 1
@@ -145,7 +153,7 @@ def close_processing_window():
 def create_gui():
     # Create the main GUI window
     root = tk.Tk()
-    root.title("PDF to CSV Converter")
+    root.title("Transcriptr")
     root.geometry("300x100")
 
     # Create a button to trigger the file open dialog
