@@ -12,7 +12,7 @@ pdfText = ""
 
 honorsRE = re.compile(r'.*honors', re.IGNORECASE)
 courseRE = re.compile(r'[A-Z]+\s\d{2,3}')
-courseLineRE = re.compile(r'(\w* \d{4}) ([A-Z]+ \d+) (\w+\s*\w*) ([UGA]*) (\D+?) ([ABCDF-]*)\s?(\d\.\d{3})')
+courseLineRE = re.compile(r'(\w* \d{4}) ([A-Z]+ \d+) (\w+\s*\w*) ([UGA]*) (\D+?) ([ABCDFIWNP+-]*)\s?(\d\.\d{3})')
 nameRE = re.compile(r'^([A-Za-z]+), ([A-Za-z]+)')
 studentChunkRE = re.compile(r'(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
 termGpaRE = re.compile(r'(Current Term) (?:\d*.\d*)* (\d.\d{2})')
