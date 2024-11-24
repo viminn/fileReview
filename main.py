@@ -6,18 +6,18 @@ import re
 import os
 import threading
 
-def open_pdf():
-    file_path = filedialog.askopenfilename(title="Select PDF File", filetypes=[("PDF files", "*.pdf")])
-    if file_path:
+def openPdf():
+    filePaths = filedialog.askopenfilenames(title="Select PDF Files", filetypes=[("PDF files", "*.pdf")])
+    if filePaths:
         show_processing_window()
 
         # Start a thread to process the PDF without freezing the GUI
-        threading.Thread(target=process_pdf, args=(file_path,)).start()
+        threading.Thread(target=processPdf, args=(filePaths,)).start()
 
-def save_csv(wholeJSON):
-    save_path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")])
-    if save_path:
-        with open(save_path, mode='w', newline='') as file:
+def saveCsv(wholeJSON):
+    savePath = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")])
+    if savePath:
+        with open(savePath, mode='w', newline='') as file:
             writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
             writer.writerow(['Name', 'Current Term GPA', 'Cumulative GPA', 'Course Code', 'Title', 'Grade', 'Credits', 'Term'])
 
@@ -28,12 +28,20 @@ def save_csv(wholeJSON):
                 for course_code, course_info in student_info['courses'].items():
                     writer.writerow([name, termGPA, cGPA, course_code, course_info['title'], course_info['grade'], course_info['credits'], course_info['term']])
             
-        messagebox.showinfo("Success", f"CSV saved successfully at {save_path}")
+        messagebox.showinfo("Success", f"CSV saved successfully at {savePath}")
 
-def process_pdf(file_path):
+def extractText(file_paths):
+    # put all text of a pdf into a string
+    pdfText = ""
+    for file_path in file_paths:
+        with pdfplumber.open(file_path) as pdf:
+            for page in pdf.pages:
+                pdfText += page.extract_text() + "\n"
+    return pdfText
+
+def processPdf(filePaths):
     try:
-        pdfText = ""
-
+        combinedPdfText = extractText(filePaths)
         studentChunkRE = re.compile(r'(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
         honorsRE = re.compile(r'.*honors', re.IGNORECASE)
         courseRE = re.compile(r'[A-Z]+\s\d{2,3}')
@@ -43,15 +51,10 @@ def process_pdf(file_path):
         cGpaRE = re.compile(r'(Overall) (?:\d*.\d*)* (\d.\d{2})')
         termLineRE = re.compile('(Term: )(\w*\s\d{4})')
 
-        # put all text of a pdf into a string
-        with pdfplumber.open(file_path) as pdf:
-            for page in pdf.pages:
-                pdfText += page.extract_text() + "\n"
-
         # split the string across students
-        allStudentList = re.split(studentChunkRE,pdfText)
+        allStudentList = re.split(studentChunkRE, combinedPdfText)
         allStudentList = filter(None, allStudentList)
-        allStudentList = list(filter(len,allStudentList))
+        allStudentList = list(filter(len, allStudentList))
 
         studentNum = 1
         wholeJSON = {}
@@ -123,7 +126,7 @@ def process_pdf(file_path):
             studentNum += 1
 
         close_processing_window()
-        save_csv(wholeJSON)
+        saveCsv(wholeJSON)
 
     except Exception as e:
         close_processing_window()
@@ -155,7 +158,7 @@ def create_gui():
     root.title("Transcriptr")
     root.geometry("300x100")
 
-    open_button = tk.Button(root, text="Open PDF", command=open_pdf)
+    open_button = tk.Button(root, text="Open PDF", command=openPdf)
     open_button.pack(pady=20)
 
     root.mainloop()
