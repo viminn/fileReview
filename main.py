@@ -92,6 +92,8 @@ def processPdf(filePaths):
                 elif termGpaRE.match(line):
                     termGpaLine = termGpaRE.search(line)
                     gpaTermList.append(termGpaLine.group(2))
+                # exclude everything else like intermediate GPA, quality points, etc
+                
             # join lines where Campus HONORS is on the next line
             for entry in courseList:
                 if entry == 'Campus HONORS':
