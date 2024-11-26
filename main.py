@@ -7,7 +7,7 @@ import os
 import threading
 
 def openPdf():
-    filePaths = filedialog.askopenfilenames(title="Select PDF Files", filetypes=[("PDF files", "*.pdf")])
+    filePaths = filedialog.askopenfilenames(title="Select one or several PDF files", filetypes=[("PDF files", "*.pdf")])
     if filePaths:
         show_processing_window()
 
@@ -160,7 +160,7 @@ def create_gui():
     root.title("Transcriptr")
     root.geometry("300x100")
 
-    open_button = tk.Button(root, text="Open PDF", command=openPdf)
+    open_button = tk.Button(root, text="Open PDF(s)", command=openPdf)
     open_button.pack(pady=20)
 
     root.mainloop()
