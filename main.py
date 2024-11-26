@@ -9,7 +9,7 @@ import threading
 def openPdf():
     filePaths = filedialog.askopenfilenames(title="Select one or several PDF files", filetypes=[("PDF files", "*.pdf")])
     if filePaths:
-        show_processing_window()
+        showProcessingWindow()
 
         # Start a thread to process the PDF without freezing the GUI
         threading.Thread(target=processPdf, args=(filePaths,)).start()
@@ -42,6 +42,7 @@ def extractText(file_paths):
 def processPdf(filePaths):
     try:
         combinedPdfText = extractText(filePaths)
+
         studentChunkRE = re.compile(r'(Kutztown\nUnofficial Academic Transcript\n.*?)(?=Kutztown\nUnofficial Academic Transcript\n)|(Kutztown\nUnofficial Academic Transcript\n.*)$', re.DOTALL)
         honorsRE = re.compile(r'.*honors', re.IGNORECASE)
         courseRE = re.compile(r'[A-Z]+\s\d{2,3}')
@@ -70,7 +71,7 @@ def processPdf(filePaths):
             gpaTermList = []
             cGpa = None
             
-            # build a list of all a student's courses
+            # use REs to grab needed data
             for line in student.split('\n'):
                 if termLineRE.match(line):
                     termLine = termLineRE.search(line)
@@ -120,6 +121,8 @@ def processPdf(filePaths):
                         grade = course.group(6)
                         creditHours = course.group(7)
                         courseDict[courseCode] = {"term": term, "title": title, "grade": grade, "credits": creditHours}
+
+            # add info to JSON
             studentJSON["name"] = studentName
             studentJSON["lastTermGPA"] = gpaTermList[-1]
             studentJSON["cumulativeGPA"] = cGpa
@@ -127,16 +130,16 @@ def processPdf(filePaths):
             wholeJSON[str(studentNum)] = studentJSON
             studentNum += 1
 
-        close_processing_window()
+        closeProcessingWindow()
         saveCsv(wholeJSON)
 
     except Exception as e:
-        close_processing_window()
+        closeProcessingWindow()
         messagebox.showerror("Error", f"An error occurred: {e}")
 
 processing_window = None
 
-def show_processing_window():
+def showProcessingWindow():
     global processing_window
     processing_window = Toplevel()
     processing_window.title("Processing")
@@ -148,13 +151,13 @@ def show_processing_window():
     # Disable interaction with the main window while processing
     processing_window.grab_set()
 
-def close_processing_window():
+def closeProcessingWindow():
     global processing_window
     if processing_window:
         processing_window.destroy()
         processing_window = None
 
-def create_gui():
+def createGui():
     # Create the main GUI window
     root = tk.Tk()
     root.title("Transcriptr")
@@ -166,4 +169,4 @@ def create_gui():
     root.mainloop()
 
 if __name__ == "__main__":
-    create_gui()
+    createGui()
