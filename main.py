@@ -6,8 +6,9 @@ import re
 import os
 import threading
 
+# TODO Add major. Add "Overall credits" and total honors credits. Don't count B- or worse. 
 def openPdf():
-    filePaths = filedialog.askopenfilenames(title="Select one or several PDF files", filetypes=[("PDF files", "*.pdf")])
+    filePaths = filedialog.askopenfilenames(title="Select one or more PDF files", filetypes=[("PDF files", "*.pdf")])
     if filePaths:
         showProcessingWindow()
 
@@ -19,14 +20,17 @@ def saveCsv(wholeJSON):
     if savePath:
         with open(savePath, mode='w', newline='') as file:
             writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['Name', 'Current Term GPA', 'Cumulative GPA', 'Course Code', 'Title', 'Grade', 'Credits', 'Term'])
+            writer.writerow(['Name', 'Current Term GPA', 'Cumulative GPA', 'Course Code', 'Title', 'Grade', 'Credits', 'Term', 'Total Credits'])
+
+            acceptableGrades = ["A+", "A", "A-", "B+", "B"]
 
             for student_id, student_info in wholeJSON.items():
                 name = student_info['name']
                 termGPA = student_info['lastTermGPA']
                 cGPA = student_info['cumulativeGPA']
+                totalCredits = student_info['totalCredits']
                 for course_code, course_info in student_info['courses'].items():
-                    writer.writerow([name, termGPA, cGPA, course_code, course_info['title'], course_info['grade'], course_info['credits'], course_info['term']])
+                    writer.writerow([name, termGPA, cGPA, course_code, course_info['title'], course_info['grade'], course_info['credits'], course_info['term'], totalCredits])
             
         messagebox.showinfo("Success", f"CSV saved successfully at {savePath}")
 
@@ -49,9 +53,10 @@ def processPdf(filePaths):
         courseLineRE = re.compile(r'(\w* \d{4}) ([A-Z]+ \d+) (\w+\s*\w*) ([UGA]*) (\D+?) ([ABCDFIWNP+-]*)\s?(\d\.\d{3})')
         nameRE = re.compile(r'^([A-Za-z]+), ([A-Za-z]+)')
         termGpaRE = re.compile(r'(Current Term) (?:\d*.\d*)* (\d.\d{2})')
-        cGpaRE = re.compile(r'(Overall) (?:\d*.\d*)* (\d.\d{2})')
-        termLineRE = re.compile('(Term: )(\w*\s\d{4})')
-
+        # cGpaRE = re.compile(r'(Overall) (?:\d*.\d*)* (\d.\d{2})')
+        termLineRE = re.compile(r'(Term: )(\w*\s\d{4})')
+        # totalCreditsRE = re.compile(r'Overall (\d*.\d*) (\d*.\d*) (\d*.\d*) (\d*.\d*) (\d*.\d*) (\d*.\d*)')
+        overallRE = re.compile(r'(Overall )(?:\d*?.\d*? ){2}(\d*.\d*) (?:\d*?.\d*? ){2}(\d.\d{2})')
         # split the string across students
         allStudentList = re.split(studentChunkRE, combinedPdfText)
         allStudentList = filter(None, allStudentList)
@@ -70,6 +75,7 @@ def processPdf(filePaths):
             term = ""
             gpaTermList = []
             cGpa = None
+            totalCredits = 0
             
             # use REs to grab needed data
             for line in student.split('\n'):
@@ -87,9 +93,10 @@ def processPdf(filePaths):
                         lastName = line.group(1)
                         firstName = line.group(2)
                         studentName = firstName + ' ' + lastName
-                elif cGpaRE.match(line):
-                    cGpaLine = cGpaRE.search(line)
-                    cGpa = cGpaLine.group(2)
+                elif overallRE.match(line):
+                    overallLine = overallRE.search(line)
+                    totalCredits = overallLine.group(2)
+                    cGpa = overallLine.group(3)
                 elif termGpaRE.match(line):
                     termGpaLine = termGpaRE.search(line)
                     gpaTermList.append(termGpaLine.group(2))
@@ -126,6 +133,7 @@ def processPdf(filePaths):
             studentJSON["name"] = studentName
             studentJSON["lastTermGPA"] = gpaTermList[-1]
             studentJSON["cumulativeGPA"] = cGpa
+            studentJSON["totalCredits"] = totalCredits
             studentJSON["courses"] = courseDict
             wholeJSON[str(studentNum)] = studentJSON
             studentNum += 1
