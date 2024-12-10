@@ -24,7 +24,7 @@ jobs:
         pip install pyinstaller pdfplumber
 
     - name: Build executable
-      run: python -m PyInstaller --onefile --windowed --hidden-import=pdfplumber main.py
+      run: python -m PyInstaller --onefile --windowed --hidden-import=pdfplumber transcriptr.py
 
     - name: Upload release artifact
       uses: actions/upload-artifact@v3
