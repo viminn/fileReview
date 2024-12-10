@@ -30,4 +30,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: executable
-        path: dist/main.exe  # Path to your generated executable
+        path: dist/transcriptr.exe  # Path to your generated executable
