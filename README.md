@@ -1,5 +1,7 @@
 # Transcriptr
 
-For my honors capstone Fall 2024
+For my honors capstone in Fall 2024, this project parses student transcripts and outputs the information into a .csv file.
 
-Compile an exe from source on Linu with "wine python -m PyInstaller --onefile --windowed --hidden-import=pdfplumber main.py"
+This project was made for the Honors Program to help with one of their business processes that takes a lot of time and effort.
+
+Compile an exe from source on Linux with "wine python -m PyInstaller --onefile --windowed --hidden-import=pdfplumber main.py"
